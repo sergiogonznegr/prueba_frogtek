@@ -4,8 +4,8 @@ import cattrs
 import numpy as np
 import logging
 from ejercicio3 import get_content_file, convert_path_to_full_path
-from api_connector.open_weather import OpenWeatherAuthenticator, OpenWeatherClient
-from model_data.cities_data import DataCity
+from api_connector.open_weather import OpenWeatherAuthenticator, OpenWeatherClientCityName, OpenWeatherClientGeolocationData
+from model_data.cities_data import DataCity, Sun
 from logging_custom.settings import setup_logging
 
 
@@ -28,18 +28,27 @@ if __name__ == "__main__":
     
     logging.info(f"Contenido del archivo: {cities}")
 
-    openweather_client = OpenWeatherClient()
+    openweather_client_city_name = OpenWeatherClientCityName()
+    openweather_client_geolocation = OpenWeatherClientGeolocationData()
     openweather_auth = OpenWeatherAuthenticator()
-    openweather_client.set_api_key(openweather_auth)
+    openweather_client_city_name.set_api_key(openweather_auth)
+    openweather_client_geolocation.set_api_key(openweather_auth)
     data = []
     for city in cities:
-        url = openweather_client.create_url(city_name=city)
-        response = openweather_client.request_url(url=url)
+        url = openweather_client_city_name.create_url(city_name=city)
+        response = openweather_client_city_name.request_url(url=url)
         if response.status_code == 404:
             data.append([city, 0, 0, 0])
             continue
         city_data = cattrs.structure(response.json(), DataCity)
-        data.append([city, city_data.main.temp, city_data.wind.speed, city_data.coord.lat, city_data.coord.lon])
+
+        url = openweather_client_geolocation.create_url(latitude=city_data.coord.lat, longitude=city_data.coord.lon)
+        response = openweather_client_geolocation.request_url(url=url)
+        if city != response["name"]:
+            logging.error("El nombre devuelto por la api con las coordenadas geograficas no coincide con el nombre de ciudad pasado")
+        sun_data = cattrs.structure(response.json()["sys"], Sun)
+        city_data.sun = sun_data
+        data.append([city, city_data.main.temp, city_data.wind.speed, city_data.coord.lat, city_data.coord.lon, city_data.sun.sunrise, city_data.sun.sunset])
 
     logging.info(f"Los datos que se van a insertar en el archivo son: {data}")
 
