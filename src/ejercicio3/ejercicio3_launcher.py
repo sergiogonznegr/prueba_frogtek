@@ -1,13 +1,20 @@
-
 import argparse
-import cattrs
-import numpy as np
 import logging
-from ejercicio3 import get_content_file, convert_path_to_full_path
-from api_connector.open_weather import OpenWeatherAuthenticator, OpenWeatherClientCityName, OpenWeatherClientGeolocationData
-from model_data.cities_data import DataCity, Sun
-from logging_custom.settings import setup_logging
 
+from api_connector.open_weather import (
+    OpenWeatherAuthenticator,
+    OpenWeatherClientCityName,
+    OpenWeatherClientGeolocationData,
+)
+
+from ejercicio3 import (
+    convert_path_to_full_path,
+    get_content_file,
+    get_sun_state_by_geolocation_data,
+    get_weather_data_by_city_name,
+    write_data_in_file,
+)
+from logging_custom.settings import setup_logging
 
 log_level = getattr(logging, "Ejercicio 3", logging.INFO)
 setup_logging(log_level)
@@ -24,8 +31,8 @@ if __name__ == "__main__":
         cities = get_content_file(full_path)
     except FileNotFoundError as fnfe:
         logging.error(f"No se ha encontrado el archivo en la ruta: {args.file_name}")
-        raise Exception(fnfe)
-    
+        raise fnfe
+
     logging.info(f"Contenido del archivo: {cities}")
 
     openweather_client_city_name = OpenWeatherClientCityName()
@@ -35,20 +42,26 @@ if __name__ == "__main__":
     openweather_client_geolocation.set_api_key(openweather_auth)
     data = []
     for city in cities:
-        url = openweather_client_city_name.create_url(city_name=city)
-        response = openweather_client_city_name.request_url(url=url)
-        if response.status_code == 404:
-            data.append([city, 0, 0, 0])
+        city_data, exists_city = get_weather_data_by_city_name(
+            openweather_connector=openweather_client_city_name, city=city
+        )
+        if not exists_city:
+            data.append([city, city_data.main.temp, city_data.wind.speed, city_data.coord.lat, city_data.coord.lon])
             continue
-        city_data = cattrs.structure(response.json(), DataCity)
+        city_data = get_sun_state_by_geolocation_data(
+            openweather_connector=openweather_client_geolocation, city_name=city, city_data=city_data
+        )
+        data.append(
+            [
+                city,
+                city_data.main.temp,
+                city_data.wind.speed,
+                city_data.coord.lat,
+                city_data.coord.lon,
+                city_data.sun.sunrise.strftime("%H:%M:%S"),
+                city_data.sun.sunset.strftime("%H:%M:%S"),
+            ]
+        )
 
-        url = openweather_client_geolocation.create_url(latitude=city_data.coord.lat, longitude=city_data.coord.lon)
-        response = openweather_client_geolocation.request_url(url=url)
-        if city != response["name"]:
-            logging.error("El nombre devuelto por la api con las coordenadas geograficas no coincide con el nombre de ciudad pasado")
-        sun_data = cattrs.structure(response.json()["sys"], Sun)
-        city_data.sun = sun_data
-        data.append([city, city_data.main.temp, city_data.wind.speed, city_data.coord.lat, city_data.coord.lon, city_data.sun.sunrise, city_data.sun.sunset])
-
-    logging.info(f"Los datos que se van a insertar en el archivo son: {data}")
-
+    write_data_in_file(data_to_write=data, file_path=full_path)
+    logging.info("Los datos fueron escritos en el archivo correctamente")

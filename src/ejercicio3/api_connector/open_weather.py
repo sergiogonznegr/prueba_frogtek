@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 import requests
 
 
@@ -16,8 +17,8 @@ class OpenWeatherAuthenticator:
             Valor de la API KEY
         """
         return self._API_KEY
-    
-    
+
+
 class OpenWeatherClient(ABC):
     _BASE_URL = "https://api.openweathermap.org/"
 
@@ -31,21 +32,20 @@ class OpenWeatherClient(ABC):
     @abstractmethod
     def create_url(self, *args, **kwargs) -> str:
         raise NotImplementedError()
-    
+
     @abstractmethod
     def request_url(self, *args, **kwargs) -> str:
         raise NotImplementedError()
 
 
 class OpenWeatherClientCityName(OpenWeatherClient):
-    _URL_DATA_BY_CITY = "data/2.5/weather?q={city_name}&appid={api_key}&units=metric",
-    
+    _URL_DATA_BY_CITY = "data/2.5/weather?q={city_name}&appid={api_key}&units=metric"
 
     def create_url(self, city_name: str) -> str:
         self._url = self._BASE_URL + self._URL_DATA_BY_CITY
         self._url = self._url.format(city_name=city_name, api_key=self._api_key)
         return self._url
-    
+
     def request_url(self, url: str = None) -> requests.Response:
         url_to_request = url or self._url
         response = requests.get(url=url_to_request)
@@ -59,7 +59,7 @@ class OpenWeatherClientGeolocationData(OpenWeatherClient):
         self._url = self._BASE_URL + self._URL_DATA_BY_GEOLOCATION_DATA
         self._url = self._url.format(latitude=latitude, longitude=longitude, api_key=self._api_key)
         return self._url
-    
+
     def request_url(self, url: str = None) -> requests.Response:
         url_to_request = url or self._url
         response = requests.get(url=url_to_request)

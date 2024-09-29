@@ -1,34 +1,38 @@
 from datetime import datetime
-import attrs
 
-@attrs.define
-class Coord:
-    lon: float
-    lat: float
+from attrs import define, field
 
 
-@attrs.define
+def timestamp_to_datetime(date_timestamp: int) -> datetime:
+    return datetime.fromtimestamp(date_timestamp)
+
+
+@define
 class Sun:
-    sunrise: datetime
-    sunset: datetime
+    sunrise: datetime = field(converter=timestamp_to_datetime)
+    sunset: datetime = field(converter=timestamp_to_datetime)
 
 
-@attrs.define
+@define
+class Coord:
+    lon: str
+    lat: str
+
+
+@define
 class Main:
-    temp: int
+    temp: str
 
 
-@attrs.define
+@define
 class Wind:
-    speed: float
+    speed: str
 
 
-@attrs.define
+@define
 class DataCity:
-    coord: Coord
-    main: Main
-    wind: Wind
-    sun: Sun
-    name: str
-    id: str
-
+    coord: Coord = None
+    main: Main = None
+    wind: Wind = None
+    name: str = None
+    sun: Sun = None

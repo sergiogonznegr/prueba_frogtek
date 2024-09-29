@@ -1,0 +1,10 @@
+[tool.black]
+line-length = 120
+target-version = ['py312']  # Indica que tu objetivo es Python 3.12
+skip-string-normalization = true
+[tool.isort]
+profile = "black"
+line_length = 120
+multi_line_output = 3
+include_trailing_comma = true
+known_first_party = ["mi_proyecto"]

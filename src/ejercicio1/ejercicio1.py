@@ -19,7 +19,7 @@ def get_numbers(text_string: str) -> list[str]:
     ----------
     string: str
         Cadena de texto de la que sacar los números
-    
+
     Returns
     -------
     int
@@ -44,5 +44,5 @@ def sum_numbers(numbers_list: list[str]) -> int:
     """
     if not isinstance(numbers_list, list):
         raise Exception()
-    
+
     return sum(map(int, numbers_list))
