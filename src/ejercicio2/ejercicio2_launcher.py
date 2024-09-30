@@ -1,10 +1,8 @@
-
 import argparse
-
 import logging
-from ejercicio2 import is_correct_ip_format, split_ip, delete_zeros, make_new_ip
-from logging_custom.settings import setup_logging
 
+from ejercicio2 import delete_zeros, is_correct_ip_format, make_new_ip, split_ip
+from logging_custom.settings import setup_logging
 
 log_level = getattr(logging, "Ejercicio 2", logging.INFO)
 setup_logging(log_level)
@@ -25,4 +23,3 @@ if __name__ == "__main__":
     new_ip = make_new_ip(elements_ip=ip_splitted)
 
     logging.info(f"La nueva IP formada es: '{new_ip}'")
-    
