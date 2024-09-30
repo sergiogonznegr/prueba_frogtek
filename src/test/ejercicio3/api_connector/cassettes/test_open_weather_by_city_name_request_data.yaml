@@ -1,0 +1,41 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.32.3
+    method: GET
+    uri: https://api.openweathermap.org/data/2.5/weather?q=Madrid&appid=2b2c54bd4f822b146e23fc28a5e1c1e6&units=metric
+  response:
+    body:
+      string: '{"coord":{"lon":-3.7026,"lat":40.4165},"weather":[{"id":800,"main":"Clear","description":"clear
+        sky","icon":"01n"}],"base":"stations","main":{"temp":22.12,"feels_like":21.14,"temp_min":18.89,"temp_max":24.04,"pressure":1018,"humidity":29,"sea_level":1018,"grnd_level":944},"visibility":10000,"wind":{"speed":1.54,"deg":220},"clouds":{"all":0},"dt":1727726101,"sys":{"type":2,"id":2084029,"country":"ES","sunrise":1727676622,"sunset":1727719132},"timezone":7200,"id":3117735,"name":"Madrid","cod":200}'
+    headers:
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST
+      Access-Control-Allow-Origin:
+      - '*'
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '500'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 30 Sep 2024 19:59:11 GMT
+      Server:
+      - openresty
+      X-Cache-Key:
+      - /data/2.5/weather?q=madrid&units=metric
+    status:
+      code: 200
+      message: OK
+version: 1

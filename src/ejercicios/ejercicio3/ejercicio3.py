@@ -67,7 +67,7 @@ def write_data_in_file(data_to_write: list[list[str]], file_path: str) -> None:
 
 def get_weather_data_by_city_name(openweather_connector: OpenWeatherClient, city: str) -> tuple[DataCity, bool]:
     url = openweather_connector.create_url(city_name=city)
-    response = openweather_connector.request_url(url=url)
+    response = openweather_connector.request_data(url=url)
     if response.status_code == 404:
         not_found_city = cattrs.structure(
             {"coord": {"lon": 0, "lat": 0}, "main": {"temp": 0}, "wind": {"speed": 0}, "name": "Guadalajara"}, DataCity
@@ -81,7 +81,7 @@ def get_sun_state_by_geolocation_data(
     openweather_connector: OpenWeatherClient, city_name: str, city_data: DataCity
 ) -> DataCity:
     url = openweather_connector.create_url(latitude=city_data.coord.lat, longitude=city_data.coord.lon)
-    response = openweather_connector.request_url(url=url)
+    response = openweather_connector.request_data(url=url)
 
     json_response = response.json()
     if city_name != json_response["name"]:

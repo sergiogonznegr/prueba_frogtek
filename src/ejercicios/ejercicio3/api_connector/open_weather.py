@@ -34,7 +34,7 @@ class OpenWeatherClient(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def request_url(self, *args, **kwargs) -> str:
+    def request_data(self, *args, **kwargs) -> str:
         raise NotImplementedError()
 
 
@@ -46,7 +46,7 @@ class OpenWeatherClientCityName(OpenWeatherClient):
         self._url = self._url.format(city_name=city_name, api_key=self._api_key)
         return self._url
 
-    def request_url(self, url: str = None) -> requests.Response:
+    def request_data(self, url: str = None) -> requests.Response:
         url_to_request = url or self._url
         response = requests.get(url=url_to_request)
         return response
@@ -60,7 +60,7 @@ class OpenWeatherClientGeolocationData(OpenWeatherClient):
         self._url = self._url.format(latitude=latitude, longitude=longitude, api_key=self._api_key)
         return self._url
 
-    def request_url(self, url: str = None) -> requests.Response:
+    def request_data(self, url: str = None) -> requests.Response:
         url_to_request = url or self._url
         response = requests.get(url=url_to_request)
         return response

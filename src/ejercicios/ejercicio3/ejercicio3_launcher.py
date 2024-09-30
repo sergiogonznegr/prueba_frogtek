@@ -49,9 +49,11 @@ if __name__ == "__main__":
         city_data, exists_city = get_weather_data_by_city_name(
             openweather_connector=openweather_client_city_name, city=city
         )
+
         if not exists_city:
             data.append([city, city_data.main.temp, city_data.wind.speed, city_data.coord.lat, city_data.coord.lon])
             continue
+
         city_data = get_sun_state_by_geolocation_data(
             openweather_connector=openweather_client_geolocation, city_name=city, city_data=city_data
         )

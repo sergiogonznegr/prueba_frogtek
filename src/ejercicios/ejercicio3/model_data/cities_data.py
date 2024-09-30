@@ -20,7 +20,7 @@ class Coord:
 
 
 @define
-class Main:
+class Temp:
     temp: str
 
 
@@ -32,7 +32,7 @@ class Wind:
 @define
 class DataCity:
     coord: Coord = None
-    main: Main = None
+    main: Temp = None
     wind: Wind = None
     name: str = None
     sun: Sun = None
