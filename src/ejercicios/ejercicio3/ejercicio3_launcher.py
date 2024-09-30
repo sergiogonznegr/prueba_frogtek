@@ -1,19 +1,9 @@
 import argparse
 import logging
 
-from api_connector.open_weather import (
-    OpenWeatherAuthenticator,
-    OpenWeatherClientCityName,
-    OpenWeatherClientGeolocationData,
-)
 
-from ejercicio3 import (
-    convert_path_to_full_path,
-    get_content_file,
-    get_sun_state_by_geolocation_data,
-    get_weather_data_by_city_name,
-    write_data_in_file,
-)
+from ejercicios.ejercicio3.api_connector.open_weather import OpenWeatherAuthenticator, OpenWeatherClientCityName, OpenWeatherClientGeolocationData
+from ejercicios.ejercicio3.ejercicio3 import convert_path_to_full_path, get_content_file, get_sun_state_by_geolocation_data, get_weather_data_by_city_name, write_data_in_file
 from logging_custom.settings import setup_logging
 
 log_level = getattr(logging, "Ejercicio 3", logging.INFO)

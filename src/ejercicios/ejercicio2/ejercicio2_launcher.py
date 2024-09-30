@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from ejercicio2 import delete_zeros, is_correct_ip_format, make_new_ip, split_ip
+from ejercicios.ejercicio2.ejercicio2 import delete_zeros, is_correct_ip_format, make_new_ip, split_ip
 from logging_custom.settings import setup_logging
 
 log_level = getattr(logging, "Ejercicio 2", logging.INFO)

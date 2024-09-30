@@ -2,8 +2,9 @@ import logging
 import os
 
 import cattrs
-from api_connector.open_weather import OpenWeatherClient
-from model_data.cities_data import DataCity, Sun
+
+from ejercicios.ejercicio3.api_connector.open_weather import OpenWeatherClient
+from ejercicios.ejercicio3.model_data.cities_data import DataCity
 
 
 def convert_path_to_full_path(path: str) -> str:
