@@ -1,6 +1,6 @@
 import pytest
 
-from ejercicio1.ejercicio1 import set_numbers
+from ejercicios.ejercicio1.ejercicio1 import sum_numbers
 
 
 @pytest.fixture
@@ -14,10 +14,10 @@ def number() -> str:
 
 
 def test_sum_numbers_works_properly(numbers_list):
-    numbers = set_numbers(numbers_list)
+    numbers = sum_numbers(numbers_list)
     assert numbers == 2050
 
 
 def test_sum_numbers_raise_exception(number):
     with pytest.raises(Exception):
-        set_numbers(number)
+        sum_numbers(number)

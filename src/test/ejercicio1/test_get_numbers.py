@@ -1,6 +1,6 @@
 import pytest
 
-from ejercicio1.ejercicio1 import get_numbers
+from ejercicios.ejercicio1.ejercicio1 import get_numbers
 
 
 @pytest.fixture

@@ -1,0 +1,33 @@
+name: Run Tests
+
+# Definir cuándo se ejecutará el workflow:
+on:
+  push:  # Se ejecuta en cada push
+  pull_request:  # Se ejecuta en cada pull request
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Elige un entorno de ejecución
+    steps:
+      - name: Checkout code  # Clonar el código del repositorio
+        uses: actions/checkout@v3
+
+      - name: Set up Python  # Configurar Python en el entorno
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.5'  # Define la versión de Python
+
+      - name: Install dependencies  # Instalar las dependencias desde requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Set PYTHONPATH  # Establecer la variable de entorno PYTHONPATH
+        run: |
+          export PYTHONPATH="$PYTHONPATH:$(pwd)/src"
+          echo $PYTHONPATH
+
+      - name: Run tests  # Ejecutar los tests con pytest
+        run: |
+          PYTHONPATH="$PYTHONPATH:$(pwd)/src" pytest --rootdir=src

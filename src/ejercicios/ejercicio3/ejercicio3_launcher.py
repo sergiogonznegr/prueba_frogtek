@@ -1,9 +1,18 @@
 import argparse
 import logging
 
-
-from ejercicios.ejercicio3.api_connector.open_weather import OpenWeatherAuthenticator, OpenWeatherClientCityName, OpenWeatherClientGeolocationData
-from ejercicios.ejercicio3.ejercicio3 import convert_path_to_full_path, get_content_file, get_sun_state_by_geolocation_data, get_weather_data_by_city_name, write_data_in_file
+from ejercicios.ejercicio3.api_connector.open_weather import (
+    OpenWeatherAuthenticator,
+    OpenWeatherClientCityName,
+    OpenWeatherClientGeolocationData,
+)
+from ejercicios.ejercicio3.ejercicio3 import (
+    convert_path_to_full_path,
+    get_content_file,
+    get_sun_state_by_geolocation_data,
+    get_weather_data_by_city_name,
+    write_data_in_file,
+)
 from logging_custom.settings import setup_logging
 
 log_level = getattr(logging, "Ejercicio 3", logging.INFO)
@@ -12,14 +21,16 @@ FILE = 'ciudades_openweather.txt'
 
 if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument("--file_path", type=str, help="Ruta dónde se encuentra el archivo. Nombre del archivo incluido", required=False)
+    arg_parser.add_argument(
+        "--file_path", type=str, help="Ruta dónde se encuentra el archivo. Nombre del archivo incluido", required=False
+    )
     args = arg_parser.parse_args()
 
     logging.info(f"La string que se ha pasado es: '{args.file_path}'")
     full_path = args.file_path if args.file_path else convert_path_to_full_path(FILE)
 
     logging.info(f"Se van a recoger los datos del archivo: {full_path}")
-    
+
     try:
         cities = get_content_file(full_path)
     except FileNotFoundError as fnfe:
