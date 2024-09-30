@@ -1,16 +1,41 @@
+# Ejercicio 3
+
+"""
+Escribe un script en Python que tome como entrada un fichero con una lista con las
+siguientes ciudades españolas (Huesca, Frogtek, Jaca, Guadalajara), una por línea. Por
+cada una de las ciudades, el script hará dos queries a la API de OpenWeather
+(https://openweathermap.org) y guardará en el fichero original los datos que pedimos,
+separados por una coma (,):
+
+    ● 1) Usando el nombre de la ciudad, consulta y guarda la temperatura, la velocidad del
+    viento y sus coordenadas geográficas (longitud y latitud).
+    ● 2) Usando las coordenadas del punto anterior, consulta y guarda la hora del
+    amanecer y anochecer y valida que el nombre de la ciudad devuelto por la petición
+    usando coordenadas devuelve el mismo nombre de la ciudad del listado.
+
+Si en el punto 1), hay algún tipo de error, se rellenarán los valores con 0 y no se hará la
+petición 2).
+
+Por ejemplo, si el listado inicial fuera de dos ciudades de nombre EXISTE y NOEXISTE, el
+fichero final quedaría así:
+
+    EXISTE,23.21,2.54,-0.7499,40.560,06:45:12,21:45:12
+    NOEXISTE,0,0,0,0
+"""
+
 import logging
 import os
 
 import cattrs
 
 from ejercicios.ejercicio3.api_connector.open_weather import OpenWeatherClient
-from ejercicios.ejercicio3.model_data.cities_data import DataCity
+from ejercicios.ejercicio3.model_data.cities_data import DataCity, Sun
 
 
 def convert_path_to_full_path(path: str) -> str:
     current_dir = os.path.dirname(os.path.abspath(__file__))
     base_path = os.path.dirname(current_dir)
-    return os.path.join(base_path, path)
+    return os.path.join(base_path, current_dir, path)
 
 
 def get_content_file(file_path: str) -> list[str]:
@@ -61,7 +86,7 @@ def get_sun_state_by_geolocation_data(
     json_response = response.json()
     if city_name != json_response["name"]:
         logging.error(
-            "El nombre devuelto por la api con las coordenadas geograficas no coincide con el nombre de ciudad pasado"
+            f"El nombre devuelto por la api ({json_response["name"]}) con las coordenadas geograficas no coincide con el nombre de ciudad pasado ({city_name})"
         )
 
     sun_data = cattrs.structure(json_response["sys"], Sun)

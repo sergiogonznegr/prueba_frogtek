@@ -8,19 +8,22 @@ from logging_custom.settings import setup_logging
 
 log_level = getattr(logging, "Ejercicio 3", logging.INFO)
 setup_logging(log_level)
-
+FILE = 'ciudades_openweather.txt'
 
 if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument("--file_name", type=str, help="Nombre y extensión del archivo", required=False)
+    arg_parser.add_argument("--file_path", type=str, help="Ruta dónde se encuentra el archivo. Nombre del archivo incluido", required=False)
     args = arg_parser.parse_args()
 
-    logging.info(f"La string que se ha pasado es: '{args.file_name}'")
-    full_path = convert_path_to_full_path(args.file_name)
+    logging.info(f"La string que se ha pasado es: '{args.file_path}'")
+    full_path = args.file_path if args.file_path else convert_path_to_full_path(FILE)
+
+    logging.info(f"Se van a recoger los datos del archivo: {full_path}")
+    
     try:
         cities = get_content_file(full_path)
     except FileNotFoundError as fnfe:
-        logging.error(f"No se ha encontrado el archivo en la ruta: {args.file_name}")
+        logging.error(f"No se ha encontrado el archivo en la ruta: {args.file_path}")
         raise fnfe
 
     logging.info(f"Contenido del archivo: {cities}")
