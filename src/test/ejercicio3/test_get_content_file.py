@@ -10,4 +10,4 @@ def file_path():
 
 def test_get_content_file(file_path):
     path = get_content_file(file_path=file_path)
-    assert path == ["hola"]
+    assert path == "hola"

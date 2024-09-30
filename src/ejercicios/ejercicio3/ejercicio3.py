@@ -38,7 +38,7 @@ def convert_path_to_full_path(path: str) -> str:
     return os.path.join(base_path, current_dir, path)
 
 
-def get_content_file(file_path: str) -> list[str]:
+def get_content_file(file_path: str) -> str:
     """
     Lee el contenido del archivo del que se ha pasado el path por parámetro
 
@@ -49,13 +49,13 @@ def get_content_file(file_path: str) -> list[str]:
 
     Return
     ------
-    list[str]
-        Listado con el nombre de las ciudades
+    str
+        Contenido del archivo
     """
     with open(file=file_path) as file:
         file_content = file.read()
 
-    return file_content.split(",\n")
+    return file_content
 
 
 def write_data_in_file(data_to_write: list[list[str]], file_path: str) -> None:
@@ -77,7 +77,7 @@ def get_weather_data_by_city_name(openweather_connector: OpenWeatherClient, city
     return city_data, True
 
 
-def get_sun_state_by_geolocation_data(
+def get_weather_data_by_geolocation_data(
     openweather_connector: OpenWeatherClient, city_name: str, city_data: DataCity
 ) -> DataCity:
     url = openweather_connector.create_url(latitude=city_data.coord.lat, longitude=city_data.coord.lon)

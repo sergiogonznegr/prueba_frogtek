@@ -9,8 +9,8 @@ from ejercicios.ejercicio3.api_connector.open_weather import (
 from ejercicios.ejercicio3.ejercicio3 import (
     convert_path_to_full_path,
     get_content_file,
-    get_sun_state_by_geolocation_data,
     get_weather_data_by_city_name,
+    get_weather_data_by_geolocation_data,
     write_data_in_file,
 )
 from logging_custom.settings import setup_logging
@@ -32,11 +32,11 @@ if __name__ == "__main__":
     logging.info(f"Se van a recoger los datos del archivo: {full_path}")
 
     try:
-        cities = get_content_file(full_path)
+        file_cities = get_content_file(full_path)
     except FileNotFoundError as fnfe:
         logging.error(f"No se ha encontrado el archivo en la ruta: {args.file_path}")
         raise fnfe
-
+    cities = file_cities.split(".\n")
     logging.info(f"Contenido del archivo: {cities}")
 
     openweather_client_city_name = OpenWeatherClientCityName()
@@ -54,7 +54,7 @@ if __name__ == "__main__":
             data.append([city, city_data.main.temp, city_data.wind.speed, city_data.coord.lat, city_data.coord.lon])
             continue
 
-        city_data = get_sun_state_by_geolocation_data(
+        city_data = get_weather_data_by_geolocation_data(
             openweather_connector=openweather_client_geolocation, city_name=city, city_data=city_data
         )
         data.append(

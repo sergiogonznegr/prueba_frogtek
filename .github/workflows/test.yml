@@ -23,8 +23,15 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements-dev.txt
 
-      - name: Run tests  # Ejecutar los tests con pytest
-        working-directory: /opt/src/
+      - name: Set environment variable for file paths
         run: |
-          export PYTHONPATH="/opt/src/" 
-          pytest --rootdir=src
+          echo "FILE_PATH=/opt/src/ejercicios" >> $GITHUB_ENV
+          
+      - name: Set PYTHONPATH  # Establecer la variable de entorno PYTHONPATH
+        run: |
+          export PYTHONPATH="$PYTHONPATH:$(pwd)/src"
+          echo $PYTHONPATH
+
+      - name: Run tests  # Ejecutar los tests con pytest
+        run: |
+          PYTHONPATH="$PYTHONPATH:$(pwd)/src" pytest --rootdir=src
