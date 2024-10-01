@@ -13,6 +13,7 @@ from ejercicios.ejercicio3.ejercicio3 import (
     get_weather_data_by_geolocation_data,
     write_data_in_file,
 )
+from exception.ejercicio3_exceptions import CityNameError
 from logging_custom.settings import setup_logging
 
 log_level = getattr(logging, "Ejercicio 3", logging.INFO)
@@ -36,7 +37,7 @@ if __name__ == "__main__":
     except FileNotFoundError as fnfe:
         logging.error(f"No se ha encontrado el archivo en la ruta: {args.file_path}")
         raise fnfe
-    cities = file_cities.split(".\n")
+    cities = file_cities.split(",\n")
     logging.info(f"Contenido del archivo: {cities}")
 
     openweather_client_city_name = OpenWeatherClientCityName()
@@ -53,10 +54,15 @@ if __name__ == "__main__":
         if not exists_city:
             data.append([city, city_data.main.temp, city_data.wind.speed, city_data.coord.lat, city_data.coord.lon])
             continue
-
-        city_data = get_weather_data_by_geolocation_data(
-            openweather_connector=openweather_client_geolocation, city_name=city, city_data=city_data
-        )
+        try:
+            city_data = get_weather_data_by_geolocation_data(
+                openweather_connector=openweather_client_geolocation, city_name=city, city_data=city_data
+            )
+        except CityNameError:
+            logging.error(
+                f"La ciudad recogida con las coordenadas: '{city_data.coord.lat}' '{city_data.coord.lon}' para la ciudad: {city_data.name} con la ciudad del archivo: {city}"
+            )
+            continue
         data.append(
             [
                 city,

@@ -30,6 +30,7 @@ import cattrs
 
 from ejercicios.ejercicio3.api_connector.open_weather import OpenWeatherClient
 from ejercicios.ejercicio3.model_data.cities_data import DataCity, Sun
+from exception.ejercicio3_exceptions import CityNameError
 
 
 def convert_path_to_full_path(path: str) -> str:
@@ -58,11 +59,13 @@ def get_content_file(file_path: str) -> str:
     return file_content
 
 
-def write_data_in_file(data_to_write: list[list[str]], file_path: str) -> None:
+def write_data_in_file(data_to_write: list[list[str]], file_path: str) -> bool:
     with open(file_path, "w") as file:
         for info in data_to_write:
             line_to_write = ",".join(info)
             file.write(line_to_write + "\n")
+
+    return True
 
 
 def get_weather_data_by_city_name(openweather_connector: OpenWeatherClient, city: str) -> tuple[DataCity, bool]:
@@ -79,17 +82,16 @@ def get_weather_data_by_city_name(openweather_connector: OpenWeatherClient, city
 
 def get_weather_data_by_geolocation_data(
     openweather_connector: OpenWeatherClient, city_name: str, city_data: DataCity
-) -> tuple[DataCity, bool]:
+) -> DataCity:
     url = openweather_connector.create_url(latitude=city_data.coord.lat, longitude=city_data.coord.lon)
     response = openweather_connector.request_data(url=url)
 
     json_response = response.json()
     if city_name != json_response["name"]:
-        logging.warning(
-            f"El nombre devuelto por la api ({json_response["name"]}) con las coordenadas geograficas no coincide con el nombre de ciudad pasado ({city_name})"
-        )
-
+        msg_err = f"El nombre devuelto por la api ({json_response["name"]}) con las coordenadas geograficas no coincide con el nombre de ciudad pasado ({city_name})"
+        logging.error(msg_err)
+        raise CityNameError(msg_err)
     sun_data = cattrs.structure(json_response["sys"], Sun)
     city_data.sun = sun_data
 
-    return city_data, True
+    return city_data

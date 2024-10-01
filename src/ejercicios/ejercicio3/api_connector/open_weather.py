@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 import requests
 
+from ejercicios.ejercicio3.model_data.cities_data import DataCity
+
 
 class OpenWeatherAuthenticator:
     _API_KEY = "2b2c54bd4f822b146e23fc28a5e1c1e6"
@@ -34,7 +36,7 @@ class OpenWeatherClient(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def request_data(self, *args, **kwargs) -> str:
+    def request_data(self, *args, **kwargs) -> requests.Response:
         raise NotImplementedError()
 
 

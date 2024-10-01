@@ -9,6 +9,7 @@ from requests import Response
 from ejercicios.ejercicio3.api_connector.open_weather import OpenWeatherClientGeolocationData
 from ejercicios.ejercicio3.ejercicio3 import get_weather_data_by_geolocation_data
 from ejercicios.ejercicio3.model_data.cities_data import DataCity
+from exception.ejercicio3_exceptions import CityNameError
 
 
 def fake_response():
@@ -58,8 +59,14 @@ def data_city():
 
 
 def test_get_weather_data_by_geolocation_data(open_weather, data_city):
-    city_data, exists_city = get_weather_data_by_geolocation_data(open_weather, "Madrid", data_city)
+    city_data = get_weather_data_by_geolocation_data(open_weather, "Madrid", data_city)
     assert isinstance(city_data, DataCity) is True
     assert city_data.sun.sunrise == datetime(2024, 9, 30, 6, 10, 22)
     assert city_data.sun.sunset == datetime(2024, 9, 30, 17, 58, 52)
-    assert exists_city is True
+
+
+def test_get_weather_data_by_geolocation_data_not_match_city_name(open_weather, data_city):
+    with pytest.raises(CityNameError):
+        get_weather_data_by_geolocation_data(
+            openweather_connector=open_weather, city_name="Frogtek", city_data=data_city
+        )
