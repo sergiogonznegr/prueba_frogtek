@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   ejercicio1:
     build:
@@ -14,7 +13,7 @@ services:
       dockerfile: Dockerfile  
     image: prueba_frogtek:0.0.1  
     container_name: prueba_frogtek_ejercicio2
-    command: python3 /opt/src/ejercicios/ejercicio2/ejercicio2_launcher.py --ip "127.0.0.1"
+    command: python3 /opt/src/ejercicios/ejercicio2/ejercicio2_launcher.py --ip "127.0.012.123"
 
   ejercicio3:
     build:
@@ -23,3 +22,11 @@ services:
     image: prueba_frogtek:0.0.1  
     container_name: prueba_frogtek_ejercicio3
     command: python3 /opt/src/ejercicios/ejercicio3/ejercicio3_launcher.py
+
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    image: prueba_frogtek:0.0.1  
+    container_name: prueba_frogtek_tests
+    command: pytest
