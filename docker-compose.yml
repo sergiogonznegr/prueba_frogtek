@@ -1,4 +1,25 @@
+version: '3.8'
 services:
   ejercicio1:
-    container_name: ejercicio1 
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    image: prueba_frogtek:0.0.1  
+    container_name: prueba_frogtek_ejercicio1  
+    command: python3 /opt/src/ejercicios/ejercicio1/ejercicio1_launcher.py --text_string "H01a 3sto es una prueba 190"
 
+  ejercicio2:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    image: prueba_frogtek:0.0.1  
+    container_name: prueba_frogtek_ejercicio2
+    command: python3 /opt/src/ejercicios/ejercicio2/ejercicio2_launcher.py --ip "127.0.0.1"
+
+  ejercicio3:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    image: prueba_frogtek:0.0.1  
+    container_name: prueba_frogtek_ejercicio3
+    command: python3 /opt/src/ejercicios/ejercicio3/ejercicio3_launcher.py
