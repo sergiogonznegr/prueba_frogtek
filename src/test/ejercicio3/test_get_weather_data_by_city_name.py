@@ -1,4 +1,5 @@
 import json
+
 import pytest
 import requests
 from requests import Response
@@ -8,7 +9,7 @@ from ejercicios.ejercicio3.ejercicio3 import get_weather_data_by_city_name
 from ejercicios.ejercicio3.model_data.cities_data import DataCity
 
 
-def fake_response():
+def fake_response_200():
     return {
         "coord": {"lon": -3.7026, "lat": 40.4165},
         "weather": [{"id": 800, "main": "Clear", "description": "clear sky", "icon": "01n"}],
@@ -35,26 +36,55 @@ def fake_response():
     }
 
 
-class FakeOpenWeatherClientCityName(OpenWeatherClientCityName):
+def fake_response_404():
+    return {"cod": "404", "message": "city not found"}
 
-    def create_url(self, city_name: str) -> str:
-        self._url = self._BASE_URL + self._URL_DATA_BY_CITY
-        self._url = self._url.format(city_name=city_name, api_key=self._api_key)
-        return self._url
+
+class FakeOpenWeatherClientCityName200(OpenWeatherClientCityName):
 
     def request_data(self, url: str = None) -> Response:
         response = requests.Response()
         response.status_code = 200
-        response._content = str.encode(json.dumps(fake_response()))
+        response._content = str.encode(json.dumps(fake_response_200()))
+        return response
+
+
+class FakeOpenWeatherClientCityName404(OpenWeatherClientCityName):
+
+    def request_data(self, url: str = None) -> Response:
+        response = requests.Response()
+        response.status_code = 404
+        response._content = str.encode(json.dumps(fake_response_404()))
         return response
 
 
 @pytest.fixture
-def open_weather():
-    return FakeOpenWeatherClientCityName()
+def open_weather_200():
+    return FakeOpenWeatherClientCityName200()
 
 
-def test_get_weather_data_by_city_name(open_weather):
-    city_data, exists_city = get_weather_data_by_city_name(open_weather, "Madrid")
+@pytest.fixture
+def open_weather_404():
+    return FakeOpenWeatherClientCityName404()
+
+
+def test_get_weather_data_by_city_name_200(open_weather_200):
+    city_data, exists_city = get_weather_data_by_city_name(open_weather_200, "Madrid")
     assert isinstance(city_data, DataCity) is True
+    assert city_data.coord.lat == "40.4165"
+    assert city_data.coord.lon == "-3.7026"
+    assert city_data.main.temp == "22.12"
+    assert city_data.name == "Madrid"
+    assert city_data.wind.speed == "1.54"
     assert exists_city is True
+
+
+def test_get_weather_data_by_city_name_404(open_weather_404):
+    city_data, exists_city = get_weather_data_by_city_name(open_weather_404, "Frogtek")
+    assert isinstance(city_data, DataCity)
+    assert city_data.coord.lat == "0"
+    assert city_data.coord.lon == "0"
+    assert city_data.main.temp == "0"
+    assert city_data.name == "Frogtek"
+    assert city_data.wind.speed == "0"
+    assert exists_city is False

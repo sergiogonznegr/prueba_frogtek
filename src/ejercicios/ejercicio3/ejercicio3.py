@@ -70,7 +70,7 @@ def get_weather_data_by_city_name(openweather_connector: OpenWeatherClient, city
     response = openweather_connector.request_data(url=url)
     if response.status_code == 404:
         not_found_city = cattrs.structure(
-            {"coord": {"lon": 0, "lat": 0}, "main": {"temp": 0}, "wind": {"speed": 0}, "name": "Guadalajara"}, DataCity
+            {"coord": {"lon": 0, "lat": 0}, "main": {"temp": 0}, "wind": {"speed": 0}, "name": city}, DataCity
         )
         return not_found_city, False
     city_data = cattrs.structure(response.json(), DataCity)
@@ -79,17 +79,17 @@ def get_weather_data_by_city_name(openweather_connector: OpenWeatherClient, city
 
 def get_weather_data_by_geolocation_data(
     openweather_connector: OpenWeatherClient, city_name: str, city_data: DataCity
-) -> DataCity:
+) -> tuple[DataCity, bool]:
     url = openweather_connector.create_url(latitude=city_data.coord.lat, longitude=city_data.coord.lon)
     response = openweather_connector.request_data(url=url)
 
     json_response = response.json()
     if city_name != json_response["name"]:
-        logging.error(
+        logging.warning(
             f"El nombre devuelto por la api ({json_response["name"]}) con las coordenadas geograficas no coincide con el nombre de ciudad pasado ({city_name})"
         )
 
     sun_data = cattrs.structure(json_response["sys"], Sun)
     city_data.sun = sun_data
 
-    return city_data
+    return city_data, True
