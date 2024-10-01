@@ -1,4 +1,5 @@
 import os
+
 import pytest
 
 from ejercicios.ejercicio3.ejercicio3 import convert_path_to_full_path
@@ -19,5 +20,5 @@ def partial_path():
 
 
 def test_partial_path_to_full_path(partial_path, choose_env):
-    path = convert_path_to_full_path(path=partial_path)
+    path = convert_path_to_full_path(file=partial_path)
     assert path == choose_env

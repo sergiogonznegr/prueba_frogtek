@@ -33,10 +33,23 @@ from ejercicios.ejercicio3.model_data.cities_data import DataCity, Sun
 from exception.ejercicio3_exceptions import CityNameError
 
 
-def convert_path_to_full_path(path: str) -> str:
+def convert_path_to_full_path(file: str) -> str:
+    """
+    Dado el nombre de un archivo busca el directorio mayor y lo concatena para forma el path
+
+    Parameters
+    ----------
+    file: str
+        Nombre del archivo a concatenar con el path
+
+    Returns
+    -------
+    str:
+        Path formado
+    """
     current_dir = os.path.dirname(os.path.abspath(__file__))
     base_path = os.path.dirname(current_dir)
-    return os.path.join(base_path, current_dir, path)
+    return os.path.join(base_path, current_dir, file)
 
 
 def get_content_file(file_path: str) -> str:
@@ -60,6 +73,21 @@ def get_content_file(file_path: str) -> str:
 
 
 def write_data_in_file(data_to_write: list[list[str]], file_path: str) -> bool:
+    """
+    Escribe los datos pasados en el archivo del path pasado
+
+    Parameters
+    ----------
+    data_to_write: list[list[str]]
+        Listado de los datos que se tienen que escribir en el archivo
+    file_path: str
+        Path del archivo dónde se tienen que escribir los datos
+
+    Return
+    -------
+    bool
+        Indica si ha escrito en el archivo
+    """
     with open(file_path, "w") as file:
         for info in data_to_write:
             line_to_write = ",".join(info)
@@ -69,6 +97,23 @@ def write_data_in_file(data_to_write: list[list[str]], file_path: str) -> bool:
 
 
 def get_weather_data_by_city_name(openweather_connector: OpenWeatherClient, city: str) -> tuple[DataCity, bool]:
+    """
+    Pide los datos del tiempo en base al nombre de la ciudad que se le pase
+
+    Parameters
+    ----------
+    openweather_connector: OpenWeatherClient
+        Cliente que nos permite hacer las peticiones a la API
+    city: str
+        Nombre de la ciudad que tenemos que pedir
+
+    Return
+    ------
+    tuple[DataCity, bool]
+        Datos modelados a la clase DataCity y un indicativo de si la ciudad "existe"
+        - True: existe
+        - False: no existe
+    """
     url = openweather_connector.create_url(city_name=city)
     response = openweather_connector.request_data(url=url)
     if response.status_code == 404:
@@ -83,6 +128,28 @@ def get_weather_data_by_city_name(openweather_connector: OpenWeatherClient, city
 def get_weather_data_by_geolocation_data(
     openweather_connector: OpenWeatherClient, city_name: str, city_data: DataCity
 ) -> DataCity:
+    """
+    Pide los datos del tiempo en base a las coordenadas que se le pasan mediante los datos recogidos en la petición anterior
+
+    Parameters
+    ----------
+    openweather_connector: OpenWeatherClient
+        Cliente que nos permite hacer las peticiones a la API
+    city_name: str
+        Nombre de la ciudad que tenemos que comprobar
+    city_data: DataCity
+        Datos que se han recogido anteriormente, se le añadirán nuevos
+
+    Return
+    ------
+    DataCity
+        Datos modelados a la clase DataCity
+
+    Raises
+    ------
+    CityNameError
+        Se lanza cuando la ciudad recogida mediante las coordenadas no coincide con la del archivo
+    """
     url = openweather_connector.create_url(latitude=city_data.coord.lat, longitude=city_data.coord.lon)
     response = openweather_connector.request_data(url=url)
 

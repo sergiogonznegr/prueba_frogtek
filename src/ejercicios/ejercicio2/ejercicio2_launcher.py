@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 
 from ejercicios.ejercicio2.ejercicio2 import delete_zeros, is_correct_ip_format, make_new_ip, split_ip
 from logging_custom.settings import setup_logging
@@ -15,7 +16,8 @@ if __name__ == "__main__":
 
     logging.info(f"La ip que se ha pasado es: '{args.ip}'")
     if not is_correct_ip_format(ip=args.ip):
-        raise Exception("La IP introducida no tiene el formato correcto")
+        logging.error("La IP introducida no tiene el formato correcto. El formato deber ser XXX.XXX.XXX.XXX")
+        sys.exit(1)
 
     logging.debug("La ip es tiene el formato correcto")
     ip_splitted = split_ip(args.ip)

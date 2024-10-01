@@ -27,15 +27,15 @@ if __name__ == "__main__":
     )
     args = arg_parser.parse_args()
 
-    logging.info(f"La string que se ha pasado es: '{args.file_path}'")
     full_path = args.file_path if args.file_path else convert_path_to_full_path(FILE)
 
     logging.info(f"Se van a recoger los datos del archivo: {full_path}")
 
     try:
         file_cities = get_content_file(full_path)
+        logging.info(f"El contenido sin transformar del archivo es: {file_cities}")
     except FileNotFoundError as fnfe:
-        logging.error(f"No se ha encontrado el archivo en la ruta: {args.file_path}")
+        logging.error(f"No se ha encontrado el archivo en la ruta: {full_path}")
         raise fnfe
     cities = file_cities.split(",\n")
     logging.info(f"Contenido del archivo: {cities}")
@@ -50,9 +50,10 @@ if __name__ == "__main__":
         city_data, exists_city = get_weather_data_by_city_name(
             openweather_connector=openweather_client_city_name, city=city
         )
-
+        logging.info(f"Datos de la ciudad: {city_data}")
         if not exists_city:
             data.append([city, city_data.main.temp, city_data.wind.speed, city_data.coord.lat, city_data.coord.lon])
+            logging.info(f"La ciudad {city} no existe o no tiene registros en la API")
             continue
         try:
             city_data = get_weather_data_by_geolocation_data(
@@ -77,3 +78,5 @@ if __name__ == "__main__":
 
     write_data_in_file(data_to_write=data, file_path=full_path)
     logging.info("Los datos fueron escritos en el archivo correctamente")
+    data = get_content_file(file_path=full_path)
+    logging.info(f"El contenido final del archivo es: {data}")

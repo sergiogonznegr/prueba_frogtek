@@ -1,4 +1,5 @@
 import os
+
 import pytest
 
 from ejercicios.ejercicio3.ejercicio3 import write_data_in_file
