@@ -185,7 +185,7 @@ def get_weather_data_by_geolocation_data(
     response = openweather_connector.request_data(url=url)
 
     json_response = response.json()
-    if city_name != json_response["name"]:
+    if city_name.capitalize() != json_response["name"].capitalize():
         msg_err = f"El nombre devuelto por la api ({json_response["name"]}) con las coordenadas geograficas no coincide con el nombre de ciudad pasado ({city_name})"
         logging.error(msg_err)
         raise CityNameError(msg_err)

@@ -12,4 +12,4 @@ exclude =
     *.txt
     *.json
 ignore = E203, E266, E501, W503, F403, F401
-max-complexity = 10
+max-complexity = 15

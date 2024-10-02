@@ -41,7 +41,7 @@ class OpenWeatherClient(ABC):
 
 
 class OpenWeatherClientCityName(OpenWeatherClient):
-    _URL_DATA_BY_CITY = "data/2.5/weather?q={city_name}&appid={api_key}&units=metric"
+    _URL_DATA_BY_CITY = "data/2.5/weather?q={city_name}&appid={api_key}&units=metric&lang=sp"
 
     def create_url(self, city_name: str) -> str:
         self._url = self._BASE_URL + self._URL_DATA_BY_CITY
@@ -55,7 +55,9 @@ class OpenWeatherClientCityName(OpenWeatherClient):
 
 
 class OpenWeatherClientGeolocationData(OpenWeatherClient):
-    _URL_DATA_BY_GEOLOCATION_DATA = "data/2.5/weather?lat={latitude}&lon={longitude}&appid={api_key}&units=metric"
+    _URL_DATA_BY_GEOLOCATION_DATA = (
+        "data/2.5/weather?lat={latitude}&lon={longitude}&appid={api_key}&units=metric&lang=sp"
+    )
 
     def create_url(self, latitude: float, longitude: float) -> str:
         self._url = self._BASE_URL + self._URL_DATA_BY_GEOLOCATION_DATA

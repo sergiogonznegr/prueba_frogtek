@@ -1,5 +1,6 @@
 import argparse
 import logging
+import sys
 
 from ejercicios.ejercicio3.api_connector.open_weather import (
     OpenWeatherAuthenticator,
@@ -41,9 +42,9 @@ if __name__ == "__main__":
     try:
         file_cities = get_content_file(full_path)
         logging.info(f"El contenido sin transformar del archivo es: {file_cities}")
-    except FileNotFoundError as fnfe:
+    except FileNotFoundError:
         logging.error(f"No se ha encontrado el archivo en la ruta: {full_path}")
-        raise fnfe
+        sys.exit(1)
 
     cities = get_cities_list(cities=file_cities)
     logging.info(f"Contenido del archivo: {cities}")
@@ -74,6 +75,11 @@ if __name__ == "__main__":
                 f"La ciudad recogida con las coordenadas: '{city_data.coord.lat}' '{city_data.coord.lon}' para la ciudad: {city_data.name} con la ciudad del archivo: {city}"
             )
             continue
+        except KeyError as ke:
+            logging.error(
+                f"No se ha encontrado la key: {ke} en la respuesta, es posible que la petición haya salido mal"
+            )
+            continue
 
         data.append(
             [
@@ -87,8 +93,9 @@ if __name__ == "__main__":
             ]
         )
 
-    write_data_in_file(data_to_write=data, file_path=full_path)
-    logging.info("Los datos fueron escritos en el archivo correctamente")
+    if data:
+        write_data_in_file(data_to_write=data, file_path=full_path)
+        logging.info("Los datos fueron escritos en el archivo correctamente")
 
     data = get_content_file(file_path=full_path)
     logging.info(

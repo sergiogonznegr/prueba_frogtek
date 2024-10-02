@@ -11,11 +11,10 @@ interactions:
       User-Agent:
       - python-requests/2.32.3
     method: GET
-    uri: https://api.openweathermap.org/data/2.5/weather?q=Madrid&appid=2b2c54bd4f822b146e23fc28a5e1c1e6&units=metric
+    uri: https://api.openweathermap.org/data/2.5/weather?q=Toledo&appid=2b2c54bd4f822b146e23fc28a5e1c1e6&units=metric&lang=sp
   response:
     body:
-      string: '{"coord":{"lon":-3.7026,"lat":40.4165},"weather":[{"id":800,"main":"Clear","description":"clear
-        sky","icon":"01n"}],"base":"stations","main":{"temp":22.12,"feels_like":21.14,"temp_min":18.89,"temp_max":24.04,"pressure":1018,"humidity":29,"sea_level":1018,"grnd_level":944},"visibility":10000,"wind":{"speed":1.54,"deg":220},"clouds":{"all":0},"dt":1727726101,"sys":{"type":2,"id":2084029,"country":"ES","sunrise":1727676622,"sunset":1727719132},"timezone":7200,"id":3117735,"name":"Madrid","cod":200}'
+      string: '{"coord":{"lon":-4,"lat":39.8333},"weather":[{"id":804,"main":"Clouds","description":"nubes","icon":"04n"}],"base":"stations","main":{"temp":18.36,"feels_like":18.55,"temp_min":18.36,"temp_max":18.36,"pressure":1011,"humidity":88,"sea_level":1011,"grnd_level":940},"visibility":10000,"wind":{"speed":10.32,"deg":271,"gust":14.36},"clouds":{"all":86},"dt":1727910524,"sys":{"country":"ES","sunrise":1727936058,"sunset":1727978121},"timezone":7200,"id":2510407,"name":"Toledo","cod":200}'
     headers:
       Access-Control-Allow-Credentials:
       - 'true'
@@ -26,15 +25,15 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '500'
+      - '485'
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Mon, 30 Sep 2024 19:59:11 GMT
+      - Wed, 02 Oct 2024 23:10:29 GMT
       Server:
       - openresty
       X-Cache-Key:
-      - /data/2.5/weather?q=madrid&units=metric
+      - /data/2.5/weather?lang=sp&q=toledo&units=metric
     status:
       code: 200
       message: OK
