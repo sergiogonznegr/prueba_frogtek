@@ -20,8 +20,20 @@ services:
       context: .
       dockerfile: Dockerfile  
     image: prueba_frogtek:0.0.1  
+    volumes:
+      - ./src/ejercicios/ejercicio3:/opt/src/ejercicios/ejercicio3
     container_name: prueba_frogtek_ejercicio3
     command: python3 /opt/src/ejercicios/ejercicio3/ejercicio3_launcher.py
+
+  ejercicio3_custom_file:
+    build:
+      context: .
+      dockerfile: Dockerfile  
+    image: prueba_frogtek:0.0.1  
+    volumes:
+      - ./src/ext_files:/opt/src/ext_files
+    container_name: prueba_frogtek_ejercicio3_custom_file
+    command: python3 /opt/src/ejercicios/ejercicio3/ejercicio3_launcher.py --file_path "/opt/src/ext_files/prueba_ciudades.txt"
 
   tests:
     build:
