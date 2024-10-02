@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile  
     image: prueba_frogtek:0.0.1  
     container_name: prueba_frogtek_ejercicio1  
-    command: python3 /opt/src/ejercicios/ejercicio1/ejercicio1_launcher.py --text_string "H01a 3sto es una prueba 190"
+    command: python3 /opt/src/ejercicios/ejercicio1/ejercicio1_launcher.py --text_string "En el año 2010 España ganó el 1er mundial de fútbol de su historia"
 
   ejercicio2:
     build:
@@ -29,4 +29,4 @@ services:
       dockerfile: Dockerfile  
     image: prueba_frogtek:0.0.1  
     container_name: prueba_frogtek_tests
-    command: pytest
+    command: pytest -v

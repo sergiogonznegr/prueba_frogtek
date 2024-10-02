@@ -52,6 +52,24 @@ def convert_path_to_full_path(file: str) -> str:
     return os.path.join(base_path, current_dir, file)
 
 
+def get_cities_list(cities: str) -> list[str]:
+    """
+    Recibe el texto que hay dentro del archivo y saca el nombre de las ciudades que hay en él
+
+    Parameters
+    ----------
+    cities: str
+        Texto con las ciudades
+
+    Return
+    ------
+    list[str]
+        Listado con las ciudades
+    """
+    list_cities = cities.split(",\n")
+    return [city.strip() for city in list_cities]
+
+
 def get_content_file(file_path: str) -> str:
     """
     Lee el contenido del archivo del que se ha pasado el path por parámetro
@@ -94,6 +112,21 @@ def write_data_in_file(data_to_write: list[list[str]], file_path: str) -> bool:
             file.write(line_to_write + "\n")
 
     return True
+
+
+def clean_data_file(file_path: str) -> None:
+    """
+    Deja el archivo que se va a usar igual que antes de lanzar el script
+
+    Parameters
+    ----------
+    file_path: str
+        Path del archivo a modificar
+    """
+    data_to_write = [
+        ["Huesca,\nFrogtek,\nJaca,\nGuadalajara"]       
+    ]
+    write_data_in_file(data_to_write=data_to_write, file_path=file_path)
 
 
 def get_weather_data_by_city_name(openweather_connector: OpenWeatherClient, city: str) -> tuple[DataCity, bool]:

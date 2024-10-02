@@ -10,7 +10,7 @@ Por ejemplo: "210.010.090.180", devolvería "210.10.90.180"
 import re
 
 
-def is_correct_ip_format(ip: str) -> bool:
+def ip_has_left_zeros(ip: str) -> bool:
     """
     Comprueba que la IP que se pasa por parámetro tiene el formato correcto
 
@@ -25,7 +25,7 @@ def is_correct_ip_format(ip: str) -> bool:
         - True: El formato es correcto
         - False: El formato es incorrecto
     """
-    return True if re.match(r'^([0-9]{1,3}\.){3}([0-9]{1,3}){1}$', ip) else False
+    return True if re.search(r'(\b0\d)', ip) else False
 
 
 def split_ip(ip: str) -> list[str]:

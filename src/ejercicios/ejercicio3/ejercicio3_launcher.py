@@ -7,7 +7,9 @@ from ejercicios.ejercicio3.api_connector.open_weather import (
     OpenWeatherClientGeolocationData,
 )
 from ejercicios.ejercicio3.ejercicio3 import (
+    clean_data_file,
     convert_path_to_full_path,
+    get_cities_list,
     get_content_file,
     get_weather_data_by_city_name,
     get_weather_data_by_geolocation_data,
@@ -18,7 +20,10 @@ from logging_custom.settings import setup_logging
 
 log_level = getattr(logging, "Ejercicio 3", logging.INFO)
 setup_logging(log_level)
+
+
 FILE = 'ciudades_openweather.txt'
+
 
 if __name__ == "__main__":
     arg_parser = argparse.ArgumentParser()
@@ -28,6 +33,8 @@ if __name__ == "__main__":
     args = arg_parser.parse_args()
 
     full_path = args.file_path if args.file_path else convert_path_to_full_path(FILE)
+    if not args.file_path:
+        clean_data_file(file_path=full_path)
 
     logging.info(f"Se van a recoger los datos del archivo: {full_path}")
 
@@ -37,7 +44,8 @@ if __name__ == "__main__":
     except FileNotFoundError as fnfe:
         logging.error(f"No se ha encontrado el archivo en la ruta: {full_path}")
         raise fnfe
-    cities = file_cities.split(",\n")
+
+    cities = get_cities_list(cities=file_cities)
     logging.info(f"Contenido del archivo: {cities}")
 
     openweather_client_city_name = OpenWeatherClientCityName()
@@ -51,10 +59,12 @@ if __name__ == "__main__":
             openweather_connector=openweather_client_city_name, city=city
         )
         logging.info(f"Datos de la ciudad: {city_data}")
+
         if not exists_city:
             data.append([city, city_data.main.temp, city_data.wind.speed, city_data.coord.lat, city_data.coord.lon])
-            logging.info(f"La ciudad {city} no existe o no tiene registros en la API")
+            logging.warning(f"La ciudad {city} no existe o no tiene registros en la API")
             continue
+
         try:
             city_data = get_weather_data_by_geolocation_data(
                 openweather_connector=openweather_client_geolocation, city_name=city, city_data=city_data
@@ -64,6 +74,7 @@ if __name__ == "__main__":
                 f"La ciudad recogida con las coordenadas: '{city_data.coord.lat}' '{city_data.coord.lon}' para la ciudad: {city_data.name} con la ciudad del archivo: {city}"
             )
             continue
+
         data.append(
             [
                 city,
@@ -78,5 +89,6 @@ if __name__ == "__main__":
 
     write_data_in_file(data_to_write=data, file_path=full_path)
     logging.info("Los datos fueron escritos en el archivo correctamente")
+
     data = get_content_file(file_path=full_path)
-    logging.info(f"El contenido final del archivo es: {data}")
+    logging.info(f"El contenido final del archivo es:\n\n{data}", )
