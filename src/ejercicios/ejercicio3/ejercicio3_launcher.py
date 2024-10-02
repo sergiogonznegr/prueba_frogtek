@@ -91,4 +91,6 @@ if __name__ == "__main__":
     logging.info("Los datos fueron escritos en el archivo correctamente")
 
     data = get_content_file(file_path=full_path)
-    logging.info(f"El contenido final del archivo es:\n\n{data}", )
+    logging.info(
+        f"El contenido final del archivo es:\n\n{data}",
+    )

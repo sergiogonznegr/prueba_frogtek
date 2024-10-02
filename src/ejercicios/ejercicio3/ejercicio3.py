@@ -123,9 +123,7 @@ def clean_data_file(file_path: str) -> None:
     file_path: str
         Path del archivo a modificar
     """
-    data_to_write = [
-        ["Huesca,\nFrogtek,\nJaca,\nGuadalajara"]       
-    ]
+    data_to_write = [["Huesca,\nFrogtek,\nJaca,\nGuadalajara"]]
     write_data_in_file(data_to_write=data_to_write, file_path=file_path)
 
 
